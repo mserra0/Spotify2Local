@@ -18,7 +18,7 @@ from dataclasses import dataclass
 
 import spotipy
 from dotenv import load_dotenv
-from spotipy.oauth2 import SpotifyClientCredentials
+from spotipy.oauth2 import SpotifyOAuth
 
 
 # ---------------------------------------------------------------------------
@@ -42,7 +42,7 @@ class Track:
 def _get_spotify_client() -> spotipy.Spotify:
     """
     Load Spotify credentials from the .env file and return an authenticated
-    spotipy.Spotify instance using the Client Credentials OAuth flow.
+    spotipy.Spotify instance using the OAuth Authorization Code flow.
 
     Raises:
         EnvironmentError: If SPOTIPY_CLIENT_ID or SPOTIPY_CLIENT_SECRET are
@@ -53,6 +53,7 @@ def _get_spotify_client() -> spotipy.Spotify:
 
     client_id = os.getenv("SPOTIPY_CLIENT_ID")
     client_secret = os.getenv("SPOTIPY_CLIENT_SECRET")
+    redirect_uri = os.getenv("SPOTIPY_REDIRECT_URI", "http://127.0.0.1:9090")
 
     if not client_id or not client_secret:
         raise EnvironmentError(
@@ -60,9 +61,12 @@ def _get_spotify_client() -> spotipy.Spotify:
             "Copy .env.example to .env and fill in your credentials."
         )
 
-    auth_manager = SpotifyClientCredentials(
+    auth_manager = SpotifyOAuth(
         client_id=client_id,
         client_secret=client_secret,
+        redirect_uri=redirect_uri,
+        # 'playlist-read-private' allows reading both public and private playlists
+        scope="playlist-read-private"
     )
     return spotipy.Spotify(auth_manager=auth_manager)
 
@@ -97,12 +101,12 @@ def get_playlist_tracks(playlist_url: str) -> list[Track]:
 
     tracks: list[Track] = []
     # Fetch the first page (up to 100 items)
-    results = sp.playlist_tracks(playlist_url)
+    results = sp.playlist_items(playlist_url)
 
     while results:
         for item in results["items"]:
-            # "track" can be None for local files or deleted tracks
-            track_data = item.get("track")
+            # Spotify API recently changed the 'track' key to 'item'
+            track_data = item.get("item") or item.get("track")
             if not track_data:
                 continue
 
