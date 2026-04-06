@@ -12,9 +12,9 @@ from textual.worker import Worker, WorkerState
 from rich.text import Text
 import pyfiglet
 
-import spotify_api
-import yt_downloader
-import metadata
+from . import spotify_api
+from . import yt_downloader
+from . import metadata
 
 # ---------------------------------------------------------------------------
 # Constants
