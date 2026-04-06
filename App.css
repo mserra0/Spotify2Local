@@ -31,7 +31,6 @@ Screen {
 
 Label {
     width: 100%;
-    color: #ffffff;
 }
 
 Input {
@@ -98,13 +97,28 @@ PlaylistItem.-highlight .track-count {
     text-align: center;
 }
 
-Header {
-    background: #1db954;
-    color: #ffffff;
+#status-label {
+    margin: 1 0;
+    text-align: center;
     text-style: bold;
 }
 
-Footer {
-    background: #121212;
-    color: #b3b3b3;
+ProgressBar {
+    width: 100%;
+    margin-bottom: 1;
+}
+
+ProgressBar > .bar--complete {
+    color: #1db954;
+}
+
+#log-view {
+    border: solid #333333;
+    height: 1fr;
+    margin-bottom: 1;
+}
+
+#back-btn {
+    width: 100%;
+    border: tall #1db954;
 }
