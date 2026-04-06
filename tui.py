@@ -153,6 +153,11 @@ class ManualUrlScreen(Screen[str]):
 class DownloadScreen(Screen):
     """Shows the progress of downloading a playlist."""
 
+    BINDINGS = [
+        Binding("enter", "back", "Back to Selection", show=False),
+        Binding("escape", "back", "Back", show=False),
+    ]
+
     def __init__(self, playlist_url: str) -> None:
         super().__init__()
         self.playlist_url = playlist_url
@@ -171,6 +176,7 @@ class DownloadScreen(Screen):
         yield Footer()
 
     def on_mount(self) -> None:
+        self.query_one("#log-view").can_focus = False
         self.query_one("#back-btn").display = False
         self.run_worker(self.start_pipeline, thread=True)
 
@@ -236,7 +242,9 @@ class DownloadScreen(Screen):
             status.update(f"[bold red]Error:[/bold red] {exc}")
 
     def show_back_button(self) -> None:
-        self.query_one("#back-btn").display = True
+        btn = self.query_one("#back-btn", Button)
+        btn.display = True
+        btn.focus()
 
     def download_and_tag(self, track: spotify_api.Track, playlist_dir: Path) -> tuple[bool, spotify_api.Track, str]:
         try:
@@ -249,6 +257,11 @@ class DownloadScreen(Screen):
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
         if event.button.id == "back-btn":
+            self.dismiss()
+
+    def action_back(self) -> None:
+        """Handle Enter/Esc keys to return if the download is finished."""
+        if self.query_one("#back-btn").display:
             self.dismiss()
 
 class Spotify2LocalApp(App):

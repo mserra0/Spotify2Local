@@ -122,3 +122,9 @@ ProgressBar > .bar--complete {
     width: 100%;
     border: tall #1db954;
 }
+
+#back-btn:focus {
+    border: tall #1ed760;
+    background: #282828;
+    text-style: bold;
+}

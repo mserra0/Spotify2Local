@@ -1,126 +1,94 @@
-# Spotify2Local
+<div align="center">
 
-Turn any Spotify playlist into an offline MP3 library with embedded metadata (title, artist, album, cover art).
+# 🎵 Spotify2Local
 
-## Features
+**Turn any Spotify playlist into an organized, high-quality offline audio library.**
 
-- Fetches tracks from a Spotify playlist
-- Searches and downloads audio from YouTube as MP3
-- Embeds ID3 metadata and album art into each file
-- Shows live progress and per-track failures in the terminal
-- Skips tracks already downloaded (idempotent behavior)
+[![Python](https://img.shields.io/badge/Python-3.11%2B-blue?logo=python&logoColor=white)](https://www.python.org/)
+[![Textual](https://img.shields.io/badge/UI-Textual-green?logo=terminal&logoColor=white)](https://textual.textualize.io/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-## Requirements
+[Features](#-features) • [Installation](#-installation) • [Setup](#-setup) • [Usage](#-usage) • [Limitations](#-limitations)
 
-- Python 3.11+
-- `ffmpeg` (required by `yt-dlp` to convert audio to MP3)
-- Spotify Developer credentials:
-  - `SPOTIPY_CLIENT_ID`
-  - `SPOTIPY_CLIENT_SECRET`
+</div>
 
-## Installation
+---
 
-### 1) Clone the repository
+## ✨ Features
 
-```bash
-git clone https://github.com/mserra0/Spotify2Local.git
-cd Spotify2Local
-```
+- **🚀 Concurrent Downloads:** Download up to 4 tracks simultaneously for maximum speed.
+- **🖥️ Modern TUI:** A sophisticated terminal interface built with Textual, featuring a searchable playlist menu and real-time progress bars.
+- **📂 Automatic Organization:** Tracks are automatically saved into folders named after their playlists.
+- **🏷️ Intelligent Tagging:** Automatically embeds ID3 metadata (Title, Artist, Album) and high-resolution cover art into every MP3.
+- **🔍 Smart Search:** Finds the best audio match on YouTube using advanced search queries.
 
-### 2) Install dependencies
+---
 
-#### Option A: with `uv` (recommended if you use it)
+## 🛠️ Installation
 
-```bash
-uv sync
-```
+This project uses [uv](https://github.com/astral-sh/uv) for lightning-fast dependency management.
 
-#### Option B: with `pip`
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/yourusername/Spotify2Local.git
+   cd Spotify2Local
+   ```
 
-```bash
-python -m venv .venv
-source .venv/bin/activate  # Windows: .venv\Scripts\activate
-pip install -e .
-```
+2. **Install dependencies:**
+   ```bash
+   uv sync
+   ```
 
-### 3) Install `ffmpeg`
+---
 
-Make sure `ffmpeg` is available in your PATH.
+## 🔑 Setup (Spotify API)
 
-- Ubuntu/Debian: `sudo apt install ffmpeg`
-- macOS (Homebrew): `brew install ffmpeg`
-- Windows: install FFmpeg and add it to PATH
+To use this tool, you must create a Spotify Developer Application.
 
-## Spotify API Setup
+1. Go to the [Spotify Developer Dashboard](https://developer.spotify.com/dashboard).
+2. Click **Create App**:
+   - **App name:** `Spotify2Local`
+   - **Redirect URI:** `http://127.0.0.1:9090` (⚠️ **Important:** Must match exactly, no trailing slash).
+3. Open **Settings** and copy your **Client ID** and **Client Secret**.
+4. Create a `.env` file in the project root:
+   ```bash
+   SPOTIPY_CLIENT_ID="your_id_here"
+   SPOTIPY_CLIENT_SECRET="your_secret_here"
+   SPOTIPY_REDIRECT_URI="http://127.0.0.1:9090"
+   ```
 
-1. Go to the Spotify Developer Dashboard: <https://developer.spotify.com/dashboard>
-2. Create an app.
-3. Copy your Client ID and Client Secret.
-4. Create a `.env` file from the template:
+---
 
-```bash
-cp .env.example .env
-```
+## 🚀 Usage
 
-5. Fill in values in `.env`:
-
-```env
-SPOTIPY_CLIENT_ID=your_spotify_client_id_here
-SPOTIPY_CLIENT_SECRET=your_spotify_client_secret_here
-```
-
-## Usage
-
-Run the CLI:
+Launch the interactive TUI:
 
 ```bash
-spotify2local
+uv run main.py
 ```
 
-or:
+### ⌨️ Controls
+- **Arrows / Type:** Search and navigate your playlists.
+- **Enter:** Select the highlighted playlist and start downloading.
+- **Type '0':** Switch to manual URL entry mode.
+- **Esc:** Exit or go back.
 
-```bash
-python main.py
-```
+---
 
-When prompted, paste a Spotify playlist URL (for example):
+## ⚠️ Limitations
 
-```text
-https://open.spotify.com/playlist/37i9dQZF1DXcBWIGoYBM5M
-```
+Please read these before using the tool:
 
-Downloaded files are saved in:
+1. **User Authentication Required:** Due to recent Spotify API changes, you must authenticate as a user. You can only view and download playlists that are in your library (owned or followed).
+2. **Editorial Playlists:** Spotify restricts third-party access to official editorial playlists (e.g., *Top 50 - Global*). If you encounter a `403 Forbidden` error, it is likely an API restriction on that specific playlist.
+3. **YouTube Matching:** This tool finds audio by searching YouTube. While highly accurate, the audio quality depends on the availability of "Official Audio" videos on YouTube.
 
-```text
-downloads/
-```
+---
 
-## How It Works
+## 🤝 Contributing
 
-1. Loads Spotify credentials from `.env`
-2. Fetches all playlist tracks (with pagination)
-3. For each track:
-   - Searches YouTube (`artist + track + official audio`)
-   - Downloads and converts to MP3
-   - Writes ID3 tags and cover art
-4. Prints a summary of successes/failures
+Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
-## Troubleshooting
+## 📜 License
 
-- **`SPOTIPY_CLIENT_ID and SPOTIPY_CLIENT_SECRET must be set`**
-  - Ensure `.env` exists and contains valid values.
-- **`yt-dlp` download/conversion issues**
-  - Verify internet access and that `ffmpeg` is installed.
-- **Playlist fetch errors**
-  - Check the playlist URL and ensure it is accessible with app credentials.
-- **Some tracks fail**
-  - This can happen when no suitable YouTube match is found. The tool continues with remaining tracks.
-
-## Notes
-
-- This project is intended for personal/offline use.
-- Ensure your usage complies with Spotify, YouTube, and local copyright laws.
-
-## License
-
-This project is licensed under the terms of the [LICENSE](LICENSE) file.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
