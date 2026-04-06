@@ -35,6 +35,15 @@ class Track:
     art_url: str       # URL of the album cover image (largest available)
 
 
+@dataclass
+class PlaylistInfo:
+    """Summary of a Spotify playlist for selection in a menu."""
+
+    name: str
+    url: str
+    track_count: int
+
+
 # ---------------------------------------------------------------------------
 # Authentication
 # ---------------------------------------------------------------------------
@@ -75,9 +84,9 @@ def _get_spotify_client() -> spotipy.Spotify:
 # Playlist fetching
 # ---------------------------------------------------------------------------
 
-def get_playlist_tracks(playlist_url: str) -> list[Track]:
+def get_playlist_tracks(playlist_url: str) -> tuple[str, list[Track]]:
     """
-    Fetch all tracks from a Spotify playlist URL.
+    Fetch the playlist name and all tracks from a Spotify playlist URL.
 
     Handles Spotify's pagination: the API returns at most 100 items per
     request, so this function keeps calling the API until all pages are
@@ -88,8 +97,7 @@ def get_playlist_tracks(playlist_url: str) -> list[Track]:
                       "https://open.spotify.com/playlist/37i9dQZF1DXcBWIGoYBM5M"
 
     Returns:
-        A list of Track objects, one per playlist entry that contains a
-        valid track (local files or missing tracks are skipped).
+        A tuple of (playlist_name, list of Track objects).
 
     Raises:
         spotipy.SpotifyException: On API-level errors (bad URL, private
@@ -98,6 +106,10 @@ def get_playlist_tracks(playlist_url: str) -> list[Track]:
                           _get_spotify_client).
     """
     sp = _get_spotify_client()
+
+    # Get playlist metadata for the name
+    playlist_meta = sp.playlist(playlist_url, fields="name")
+    playlist_name = playlist_meta.get("name", "Unknown Playlist")
 
     tracks: list[Track] = []
     # Fetch the first page (up to 100 items)
@@ -131,7 +143,40 @@ def get_playlist_tracks(playlist_url: str) -> list[Track]:
                 )
             )
 
-        # Follow the pagination cursor; None means we've reached the last page
+        # Follow pagination
         results = sp.next(results) if results.get("next") else None
 
-    return tracks
+    return playlist_name, tracks
+
+
+def get_user_playlists() -> list[PlaylistInfo]:
+    """
+    Fetch the list of playlists owned or followed by the current user.
+
+    Returns:
+        A list of PlaylistInfo objects for each playlist found.
+    """
+    sp = _get_spotify_client()
+    playlists: list[PlaylistInfo] = []
+
+    # Fetch the first page of user playlists
+    results = sp.current_user_playlists(limit=50)
+
+    while results:
+        for item in results["items"]:
+            # Spotify API recently changed 'tracks' to 'items' here as well
+            tracks_info = item.get("items") or item.get("tracks")
+            track_total = tracks_info.get("total", 0) if tracks_info else 0
+
+            playlists.append(
+                PlaylistInfo(
+                    name=item["name"],
+                    url=item["external_urls"]["spotify"],
+                    track_count=track_total,
+                )
+            )
+
+        # Follow pagination
+        results = sp.next(results) if results.get("next") else None
+
+    return playlists
