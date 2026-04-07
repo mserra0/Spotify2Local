@@ -14,6 +14,8 @@
 
 ---
 
+![Spotify2Local Demo](.assets/demo.gif)
+
 ## ✨ Features
 
 - **🚀 Concurrent Downloads:** Download up to 4 tracks simultaneously for maximum speed.
