@@ -14,7 +14,7 @@
 
 ---
 
-![Spotify2Local Demo](.assets/demo.gif)
+![Spotify2Local Demo](assets/demo.gif)
 
 ## ✨ Features
 
