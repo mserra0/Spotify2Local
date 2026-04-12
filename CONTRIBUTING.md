@@ -1,46 +1,71 @@
 # Contributing to Spotify2Local
 
-Thank you for your interest in contributing to **Spotify2Local**! We appreciate your help in making this tool even better.
+First off, thank you for considering contributing to Spotify2Local. 
 
-## 🚀 How to Contribute
+We want to keep this tool fast, reliable, and incredibly simple to use. Whether you are fixing a bug, adding a new feature to the TUI, or improving the documentation, your help is appreciated.
 
-### 1. Reporting Bugs
-- Check the [Issues](https://github.com/yourusername/Spotify2Local/issues) to see if the bug has already been reported.
-- If not, open a new issue with a clear description, steps to reproduce, and any relevant logs or screenshots.
+## The Golden Rule
 
-### 2. Requesting Features
-- Open an issue and label it as a "feature request."
-- Describe the feature you'd like to see and why it would be useful.
+Before writing any code for a major new feature, please **open an issue first** to discuss it. This ensures your time isn't wasted on a feature that might fall outside the scope of the project.
 
-### 3. Submitting Pull Requests
-1. **Fork** the repository and create your branch from `main`.
-2. **Install** the development dependencies using `uv sync`.
-3. **Make** your changes, ensuring you follow the project's coding style (PEP 8).
-4. **Test** your changes to ensure they don't introduce regressions.
-5. **Commit** your changes with a clear and concise message.
-6. **Submit** your pull request for review.
+## Local Development Setup
 
-## 🛠️ Development Setup
+Spotify2Local uses [`uv`](https://github.com/astral-sh/uv) to keep dependency management fast and isolated.
 
-1. **Install uv:**
+1. **Fork the repository** to your own GitHub account.
+2. **Clone your fork** locally:
    ```bash
-   curl -LsSf https://astral.sh/uv/install.sh | sh
-   ```
-
-2. **Clone and Setup:**
-   ```bash
-   git clone https://github.com/yourusername/Spotify2Local.git
+   git clone [https://github.com/YOUR_USERNAME/Spotify2Local.git](https://github.com/YOUR_USERNAME/Spotify2Local.git)
    cd Spotify2Local
+   ```
+3. **Sync the environment:**
+   ```bash
    uv sync
    ```
-
-3. **Running the TUI in Debug Mode:**
+4. **Set up your environment variables:** Copy the `.env.example` to `.env` and add your Spotify Developer credentials so you can test the application locally.
    ```bash
-   uv run textual run --dev main.py
+   cp .env.example .env
    ```
 
-## 📜 Code of Conduct
-Please be respectful and helpful in all your interactions. Our goal is to maintain a positive and welcoming community.
+## Workflow
 
-## 💎 License
-By contributing, you agree that your contributions will be licensed under the project's [MIT License](LICENSE).
+We follow a standard GitHub Flow workflow.
+
+1. Create a new branch for your feature or bugfix:
+   ```bash
+   git checkout -b feature/your-feature-name
+   # or
+   git checkout -b fix/your-bug-fix
+   ```
+2. Make your changes and test them locally by running the TUI:
+   ```bash
+   uv run main.py
+   ```
+3. Commit your changes with a clear, descriptive commit message.
+4. Push the branch to your fork:
+   ```bash
+   git push origin feature/your-feature-name
+   ```
+5. Open a **Pull Request** against the `main` branch of this repository.
+
+## Code Style & Standards
+
+To maintain the quality and readability of the codebase, please adhere to the following guidelines:
+
+- **Type Hints:** This project requires Python 3.11+. Please use strict type hinting for all new functions and methods.
+- **The TUI:** We use `Textual` and `Rich`. If you are adding UI elements, ensure they remain responsive and follow the existing dark-mode terminal aesthetic. Avoid adding unnecessary visual clutter.
+- **Keep it fast:** If you are modifying the downloading or matching logic, ensure it does not introduce blocking operations that freeze the UI.
+
+> [!NOTE]
+> **Testing API Limits:** If you are working on the audio fetching mechanics, please test responsibly. Rapid, repeated calls to the Spotify API or YouTube extraction endpoints during development can result in temporary IP bans.
+
+## Reporting Bugs
+
+If you find a bug but don't have the time to fix it yourself, please open an issue. Include:
+- Your operating system and terminal emulator.
+- The exact command you ran.
+- The traceback or error message.
+- Steps to reproduce the issue.
+
+---
+*Thank you for helping make Spotify2Local better.*
