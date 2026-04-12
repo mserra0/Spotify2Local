@@ -28,8 +28,10 @@
   <a href="#usage">
     <img src="https://img.shields.io/badge/Usage-18181B?style=for-the-badge" alt="Usage">
   </a>
+  <a href="#contributing">
+    <img src="https://img.shields.io/badge/Contributing-18181B?style=for-the-badge" alt="Contributing">
+  </a>
 </p>
-
 
 Spotify2Local is a zero-friction terminal utility that bridges your Spotify library with your local storage. Built with a responsive TUI, it automatically resolves tracks, fetches the highest quality audio via YouTube, and precisely tags your files with ID3 metadata—all without the setup headache.
 
@@ -95,6 +97,10 @@ uv run main.py
 > [!IMPORTANT]
 > - **Library Requirement:** The tool can only process playlists saved to your authenticated account. To download a public playlist, simply open it in Spotify, click the `...` menu, and select **Add to Your Library** before running the tool.
 > - **Editorial Restrictions:** Spotify restricts direct API access to certain official editorial playlists, which may result in a `403 Forbidden` error. **The fix:** Create a new personal playlist, copy all the tracks from the editorial playlist into it, and download your personal playlist instead.
+
+## Contributing
+
+We love community contributions. If you'd like to help improve Spotify2Local, whether it's fixing a bug or adding a new TUI feature, please review our [Contributing Guide](CONTRIBUTING.md) for instructions on setting up your local environment and submitting a pull request.
 
 ## Acknowledgements ❤️
 
