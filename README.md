@@ -3,6 +3,9 @@
 </p>
 
 <p align="center">
+  <a href="https://pypi.org/project/spotify2local/">
+    <img src="https://img.shields.io/pypi/v/spotify2local?style=for-the-badge&color=blue" alt="PyPI Package">
+  </a>
   <a href="https://www.python.org/">
     <img src="https://img.shields.io/badge/Python-3.11%2B-14354C?style=for-the-badge&logo=python&logoColor=white" alt="Python 3.11+">
   </a>
