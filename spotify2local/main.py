@@ -4,7 +4,7 @@ main.py
 Entry point for the Spotify2Local TUI application.
 """
 
-from src.tui import Spotify2LocalApp
+from spotify2local.tui import Spotify2LocalApp
 
 def main() -> None:
     """

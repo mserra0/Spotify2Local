@@ -301,7 +301,9 @@ class SetupScreen(Screen[bool]):
                 return
 
             # Save to .env
-            env_path = Path(".env")
+            config_dir = Path.home() / ".spotify2local"
+            config_dir.mkdir(parents=True, exist_ok=True)
+            env_path = config_dir / ".env"
             env_content = (
                 f"SPOTIPY_CLIENT_ID={client_id}\n"
                 f"SPOTIPY_CLIENT_SECRET={client_secret}\n"
@@ -324,7 +326,8 @@ class Spotify2LocalApp(App):
     playlists: list[spotify_api.PlaylistInfo] = []
     
     def on_mount(self) -> None:
-        load_dotenv()
+        config_dir = Path.home() / ".spotify2local"
+        load_dotenv(dotenv_path=config_dir / ".env")
         client_id = os.getenv("SPOTIPY_CLIENT_ID")
         client_secret = os.getenv("SPOTIPY_CLIENT_SECRET")
         if not client_id or not client_secret:

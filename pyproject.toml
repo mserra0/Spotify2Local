@@ -4,6 +4,17 @@ version = "0.1.0"
 description = "Turn any Spotify playlist into an offline audio library in seconds."
 readme = "README.md"
 requires-python = ">=3.11"
+authors = [
+    { name = "mserra0", email = "marcserraortega@gmail.com" }
+]
+license = "MIT"
+keywords = ["spotify", "mp3", "downloader", "tui", "youtube"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Environment :: Console",
+]
 dependencies = [
     "spotipy>=2.24.0",
     "yt-dlp>=2024.1.0",
@@ -16,14 +27,14 @@ dependencies = [
 ]
 
 [project.scripts]
-spotify2local = "main:main"
+spotify2local = "spotify2local.main:main"
 
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
-packages = ["."]
+packages = ["spotify2local"]
 
 [tool.ruff]
 line-length = 88

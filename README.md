@@ -46,43 +46,45 @@ Spotify2Local is a zero-friction terminal utility that bridges your Spotify libr
 
 ## Installation
 
-Spotify2Local uses [`uv`](https://github.com/astral-sh/uv) for fast, reliable dependency management. 
+### Quick Install (Recommended)
+
+Install the tool globally using `pip` (or `uv tool`):
+
+```bash
+pip install spotify2local
+```
+
+### For Developers
+
+If you want to contribute or run from the source, Spotify2Local uses [`uv`](https://github.com/astral-sh/uv) for fast, reliable dependency management. 
 
 Clone the repository and sync the environment:
 
 ```bash
-git clone [https://github.com/mserra0/Spotify2Local.git](https://github.com/mserra0/Spotify2Local.git)
+git clone https://github.com/mserra0/Spotify2Local.git
 cd Spotify2Local
 uv sync
-````
-
-## Configuration
-
-Before running the application, you need to provide your Spotify API credentials.
-
-1.  Create an application in the [Spotify Developer Dashboard](https://developer.spotify.com/dashboard).
-2.  Set your redirect URI to `http://127.0.0.1:9090`.
-3.  Copy the `.env.example` file to `.env` and apply your credentials. ALL DONE!
-
-<!-- end list -->
-
-```bash
-cp .env.example .env
-```
-
-```env
-SPOTIPY_CLIENT_ID="your_client_id"
-SPOTIPY_CLIENT_SECRET="your_client_secret"
-SPOTIPY_REDIRECT_URI="[http://127.0.0.1:9090](http://127.0.0.1:9090)"
 ```
 
 ## Usage
 
-Launch the interactive interface:
+If installed globally, launch the interactive interface from anywhere by typing:
 
 ```bash
-uv run main.py
+spotify2local
 ```
+
+If developing locally, launch it using:
+
+```bash
+uv run spotify2local
+```
+
+### First-Run Setup
+
+Spotify2Local features a frictionless onboarding experience. If it's your first time running the application, a setup screen inside the terminal will guide you through obtaining your Spotify Developer credentials and automatically securely save them for you.
+
+*(For advanced users: Your configuration and cache are stored safely in `~/.spotify2local/`)*
 
 ### Controls
 
