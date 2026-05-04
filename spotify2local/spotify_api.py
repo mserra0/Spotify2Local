@@ -48,6 +48,8 @@ class PlaylistInfo:
 # Authentication
 # ---------------------------------------------------------------------------
 
+from pathlib import Path
+
 def _get_spotify_client() -> spotipy.Spotify:
     """
     Load Spotify credentials from the .env file and return an authenticated
@@ -58,7 +60,8 @@ def _get_spotify_client() -> spotipy.Spotify:
                           not set in the environment / .env file.
     """
     # Load variables from .env if present (does not override existing env vars)
-    load_dotenv()
+    config_dir = Path.home() / ".spotify2local"
+    load_dotenv(dotenv_path=config_dir / ".env")
 
     client_id = os.getenv("SPOTIPY_CLIENT_ID")
     client_secret = os.getenv("SPOTIPY_CLIENT_SECRET")
@@ -75,7 +78,8 @@ def _get_spotify_client() -> spotipy.Spotify:
         client_secret=client_secret,
         redirect_uri=redirect_uri,
         # 'playlist-read-private' allows reading both public and private playlists
-        scope="playlist-read-private"
+        scope="playlist-read-private",
+        cache_path=str(config_dir / ".cache")
     )
     return spotipy.Spotify(auth_manager=auth_manager)
 
