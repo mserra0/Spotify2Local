@@ -11,6 +11,7 @@ from textual.screen import Screen
 from textual.worker import Worker, WorkerState
 from rich.text import Text
 import pyfiglet
+from dotenv import load_dotenv
 
 from . import spotify_api
 from . import yt_downloader
@@ -264,6 +265,58 @@ class DownloadScreen(Screen):
         if self.query_one("#back-btn").display:
             self.dismiss()
 
+class SetupScreen(Screen[bool]):
+    """First-run screen to configure Spotify API credentials."""
+
+    BINDINGS = [
+        Binding("escape", "app.quit", "Exit"),
+    ]
+
+    def compose(self) -> ComposeResult:
+        yield Vertical(
+            Banner(),
+            Label("[bold cyan]Welcome to Spotify2Local![/bold cyan]"),
+            Label("To get started, you need to configure your Spotify API credentials."),
+            Label("1. Go to [cyan][underline]https://developer.spotify.com/dashboard[/underline][/cyan] and log in."),
+            Label("2. Click [bold]'Create app'[/bold]. Name it whatever you like."),
+            Label("3. Set the Redirect URI to [bold cyan]http://127.0.0.1:9090[/bold cyan]."),
+            Label("4. Copy the Client ID and Client Secret into the fields below."),
+            Input(placeholder="Client ID", id="client-id", password=False),
+            Input(placeholder="Client Secret", id="client-secret", password=True),
+            Button("Save & Continue", id="save-btn", variant="success"),
+            id="setup-container"
+        )
+        yield Footer()
+
+    def on_mount(self) -> None:
+        self.query_one("#client-id").focus()
+
+    def on_button_pressed(self, event: Button.Pressed) -> None:
+        if event.button.id == "save-btn":
+            client_id = self.query_one("#client-id", Input).value.strip()
+            client_secret = self.query_one("#client-secret", Input).value.strip()
+
+            if not client_id or not client_secret:
+                self.app.notify("Client ID and Secret are required.", severity="error")
+                return
+
+            # Save to .env
+            env_path = Path(".env")
+            env_content = (
+                f"SPOTIPY_CLIENT_ID={client_id}\n"
+                f"SPOTIPY_CLIENT_SECRET={client_secret}\n"
+                f"SPOTIPY_REDIRECT_URI=http://127.0.0.1:9090\n"
+            )
+            env_path.write_text(env_content)
+
+            # Reload env vars in current process (so spotify_api uses them)
+            os.environ["SPOTIPY_CLIENT_ID"] = client_id
+            os.environ["SPOTIPY_CLIENT_SECRET"] = client_secret
+            os.environ["SPOTIPY_REDIRECT_URI"] = "http://127.0.0.1:9090"
+
+            self.app.notify("Credentials saved successfully!", severity="information")
+            self.dismiss(True)
+
 class Spotify2LocalApp(App):
     """The full Spotify2Local TUI application."""
     
@@ -271,7 +324,19 @@ class Spotify2LocalApp(App):
     playlists: list[spotify_api.PlaylistInfo] = []
     
     def on_mount(self) -> None:
-        self.run_worker(self.load_initial_data, thread=True)
+        load_dotenv()
+        client_id = os.getenv("SPOTIPY_CLIENT_ID")
+        client_secret = os.getenv("SPOTIPY_CLIENT_SECRET")
+        if not client_id or not client_secret:
+            self.push_screen(SetupScreen(), self.handle_setup_finished)
+        else:
+            self.run_worker(self.load_initial_data, thread=True)
+
+    def handle_setup_finished(self, success: bool | None) -> None:
+        if success:
+            self.run_worker(self.load_initial_data, thread=True)
+        else:
+            self.exit()
 
     def load_initial_data(self) -> None:
         try:

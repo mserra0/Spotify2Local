@@ -128,3 +128,28 @@ ProgressBar > .bar--complete {
     background: #282828;
     text-style: bold;
 }
+
+#setup-container {
+    padding: 1 2;
+    height: 100%;
+}
+
+#setup-container Label {
+    margin-bottom: 1;
+    text-align: center;
+}
+
+#save-btn {
+    width: 100%;
+    margin-top: 2;
+    border: tall #1db954;
+    background: #1db954;
+    color: #ffffff;
+    text-style: bold;
+}
+
+#save-btn:focus {
+    border: tall #1ed760;
+    background: #1ed760;
+    text-style: bold;
+}
