@@ -49,6 +49,13 @@ Spotify2Local is a zero-friction terminal utility that bridges your Spotify libr
 
 ## Installation
 
+### Prerequisites
+Spotify2Local requires **FFmpeg** to process audio and embed metadata. Install it using your system's package manager:
+
+- **Windows:** `winget install ffmpeg` (or download it from [gyan.dev](https://www.gyan.dev/ffmpeg/builds/))
+- **macOS:** `brew install ffmpeg`
+- **Linux:** `sudo apt install ffmpeg`
+
 ### Quick Install (Recommended)
 
 Install the tool globally using `pip` (or `uv tool`):
